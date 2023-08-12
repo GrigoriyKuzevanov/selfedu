@@ -3,19 +3,18 @@ from django.shortcuts import redirect, render
 from .models import *
 
 
-menu = [
-    {'title': 'О сайте', 'url_name': 'about'},
-    {'title': 'Добавить статью', 'url_name': 'add_page'},
-    {'title': 'Обратная связь', 'url_name': 'contacts'},
-    {'title': 'Войти', 'url_name': 'login'},
-]
+# menu = [
+#     {'title': 'О сайте', 'url_name': 'about'},
+#     {'title': 'Добавить статью', 'url_name': 'add_page'},
+#     {'title': 'Обратная связь', 'url_name': 'contacts'},
+#     {'title': 'Войти', 'url_name': 'login'},
+# ]
 
 def index(request):
     posts = Women.objects.all()
 
     context = {
         'posts': posts,
-        'menu': menu,
         'title': 'Главная страница',
         'cat_selected': 0,
     }
@@ -44,7 +43,7 @@ def show_category(request, cat_id):
 
     context = {
         'posts': posts,
-        'menu': menu,
+        # 'menu': menu,
         'title': 'Отображение по рубрикам',
         'cat_selected': cat_id,
     }
