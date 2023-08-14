@@ -1,14 +1,14 @@
 from django.http import Http404, HttpResponse, HttpResponseNotFound
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from .models import *
 
 
-# menu = [
-#     {'title': 'О сайте', 'url_name': 'about'},
-#     {'title': 'Добавить статью', 'url_name': 'add_page'},
-#     {'title': 'Обратная связь', 'url_name': 'contacts'},
-#     {'title': 'Войти', 'url_name': 'login'},
-# ]
+menu = [
+    {'title': 'О сайте', 'url_name': 'about'},
+    {'title': 'Добавить статью', 'url_name': 'add_page'},
+    {'title': 'Обратная связь', 'url_name': 'contacts'},
+    {'title': 'Войти', 'url_name': 'login'},
+]
 
 def index(request):
     posts = Women.objects.all()
@@ -33,7 +33,15 @@ def login(request):
     return HttpResponse('Здесь будет раздел "Login"!')
 
 def show_post(request, post_id):
-    return HttpResponse(f'Здесь будет статья с id {post_id}')
+    post = get_object_or_404(Women, pk=post_id)
+    
+    context = {
+        'post': post,
+        'menu': menu,
+        'title': post.title,
+        'cat_selected': post.cat_id,
+    }
+    return render(request, 'women/post.html', context=context)
 
 def show_category(request, cat_id):
     posts = Women.objects.filter(cat_id=cat_id)
