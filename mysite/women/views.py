@@ -4,6 +4,7 @@ from django.http import Http404, HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import *
 from .models import *
@@ -54,10 +55,12 @@ class ShowPost(DataMixin, DetailView):
         return context | c_def
     
 
-class AddPage(DataMixin, CreateView):
+class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddPostForm
     template_name = 'women/addpage.html'
     seccess_url = reverse_lazy('home')  # адрес, по которому перейдет джанго в случае успешного добавления статьи
+    # login_url = reverse_lazy('home')
+    raise_exception = True
 
     def get_context_data(self,*, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
