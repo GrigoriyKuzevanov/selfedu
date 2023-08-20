@@ -4,7 +4,7 @@ from django.forms.models import BaseModelForm
 from django.http import Http404, HttpResponse, HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.views import LoginView
@@ -109,6 +109,21 @@ def logout_user(request):
     return redirect('login')
 
 
+class ContactFormView(DataMixin, FormView):
+    form_class = ContactForm
+    template_name = 'women/contact.html'
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self,*, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Обратная связь')
+        return context | c_def
+    
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return redirect('home')
+
+
 # def index(request):
 #     posts = Women.objects.all()
 
@@ -136,8 +151,8 @@ def about(request):
 #         form = AddPostForm()
 #     return render (request, 'women/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление статьи'})
 
-def contacts(request):
-    return HttpResponse('Здесь будет раздел "Контакты"!')
+# def contacts(request):
+#     return HttpResponse('Здесь будет раздел "Контакты"!')
 
 # def login(request):
 #     return HttpResponse('Здесь будет раздел "Login"!')
